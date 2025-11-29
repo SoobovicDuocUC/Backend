@@ -6,6 +6,7 @@ import com.huertohogar.Backend.repository.ProductoRepository;
 import com.huertohogar.Backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,25 +14,40 @@ public class DatabaseLoader implements CommandLineRunner {
 
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder; // 1. Declaramos la variable
 
     @Autowired
-    public DatabaseLoader(ProductoRepository productoRepository, UsuarioRepository usuarioRepository) {
+    public DatabaseLoader(
+            ProductoRepository productoRepository,
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder passwordEncoder // 2. La pedimos en el constructor
+    ) {
         this.productoRepository = productoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder; // 3. La inicializamos (aquí estaba el error)
     }
 
     @Override
     public void run(String... args) throws Exception {
-
+        // Limpiamos la base de datos
         productoRepository.deleteAll();
         usuarioRepository.deleteAll();
 
-        usuarioRepository.save(new Usuario("admin@huerto.cl", "admin123", "ADMIN"));
+        // --- USUARIOS ---
+        // Ahora usamos passwordEncoder.encode() para guardar la clave encriptada
+        usuarioRepository.save(new Usuario(
+                "admin@huerto.cl",
+                passwordEncoder.encode("admin123"),
+                "ADMIN"
+        ));
 
+        usuarioRepository.save(new Usuario(
+                "cliente@huerto.cl",
+                passwordEncoder.encode("cliente123"),
+                "USER"
+        ));
 
-        usuarioRepository.save(new Usuario("cliente@huerto.cl", "cliente123", "USER"));
-
-        // --- FRUTAS ---
+        // --- PRODUCTOS (Frutas) ---
         productoRepository.save(new Producto(
                 "FR001", "Manzana Fuji", 937,
                 "https://media.istockphoto.com/id/184276818/es/foto/manzana-red.jpg?s=612x612&w=0&k=20&c=BFD8ixD7eyXMm3aSVIdz1hUsLG-lX8Ig2HBr6IVJuzU=",
@@ -47,7 +63,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 "https://media.istockphoto.com/id/173242750/es/foto/racimo-de-pl%C3%A1tanos.jpg?s=612x612&w=0&k=20&c=-RqILbvnZIp5YZRm3BGc-i5n_e2VsJCUu9GU9OqVAbk=",
                 "frutas", "$1.490 x kg", "Granel"));
 
-        // --- VERDURAS ---
+        // --- PRODUCTOS (Verduras) ---
         productoRepository.save(new Producto(
                 "VR001", "Zanahorias Hubolt", 937,
                 "https://media.istockphoto.com/id/166106089/es/foto/aislado-de-zanahoria.jpg?s=612x612&w=0&k=20&c=4PYVf5-dUR1N5ZLjDBVBaATdUq3KjNS6tjFHiyaW6Xk=",
@@ -63,7 +79,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 "https://www.ammarket.com/wp-content/uploads/2021/11/pimiento_tricolor_ammarket_frutas_verduras_a_domicilio_2.jpg",
                 "verduras", "$1.490 x kg", "Granel"));
 
-        // --- ORGANICOS ---
+        // --- PRODUCTOS (Orgánicos) ---
         productoRepository.save(new Producto(
                 "PO001", "Miel Orgánica", 949,
                 "https://www.ecopraha.cl/wp-content/uploads/2022/imagenes/POTE_MIEL_1KG.PNG",
@@ -74,12 +90,12 @@ public class DatabaseLoader implements CommandLineRunner {
                 "https://acdn-us.mitiendanube.com/stores/002/625/145/products/granola-exotica-2023-04-03t152012-8511-89ac452da81f95c3b816805464075205-640-0.jpg",
                 "organicos", "$1.490 x kg", "Granel"));
 
-        // --- LACTEOS ---
+        // --- PRODUCTOS (Lácteos) ---
         productoRepository.save(new Producto(
                 "PL001", "Leche Semidescremada Surlat", 1190,
                 "https://i.bolder.run/r/czoyMzA1MyxnOjEwMDB4/0ab17529/856531-LECHE-SURLAT-SEMI-DESCREMADA-1LT.jpg",
                 "lacteos", null, "1 litro x unidad"));
 
-        System.out.println("Base de datos inicializada con Productos y Usuarios...");
+        System.out.println("--- BASE DE DATOS INICIALIZADA (Usuarios y Productos) ---");
     }
 }

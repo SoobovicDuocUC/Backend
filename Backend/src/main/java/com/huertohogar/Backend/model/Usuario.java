@@ -16,6 +16,10 @@ public class Usuario implements UserDetails {
 
     @Column(unique = true)
     private String email;
+
+    @Column(unique = true) // <--- NUEVO: Asegura que el username sea único
+    private String username; // <--- NUEVO CAMPO
+
     private String password;
     private String role; // "ADMIN" o "USER"
 
@@ -27,6 +31,13 @@ public class Usuario implements UserDetails {
         this.role = role;
     }
 
+    public Usuario(String email, String username, String password, String role) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
     // --- MÉTODOS DE SEGURIDAD (UserDetails) ---
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -34,7 +45,8 @@ public class Usuario implements UserDetails {
     }
 
     @Override
-    public String getUsername() { return email; } // Usamos email como usuario
+    // IMPORTANTE: Mantenemos el email como el identificador principal para Spring Security.
+    public String getUsername() { return email; }
 
     @Override
     public String getPassword() { return password; }
@@ -52,4 +64,6 @@ public class Usuario implements UserDetails {
     public void setPassword(String password) { this.password = password; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    public String getUsernamePropiedad() { return username; }
+    public void setUsername(String username) { this.username = username; }
 }

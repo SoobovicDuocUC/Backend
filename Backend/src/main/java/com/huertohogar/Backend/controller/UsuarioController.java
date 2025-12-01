@@ -11,13 +11,16 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    // Recibe el Usuario (con email, username, y password) y lo registra
     @PostMapping("/register")
     public Usuario registrar(@RequestBody Usuario usuario) {
         return usuarioService.registrar(usuario);
     }
 
+    // Recibe el Usuario (con email y password) y extrae solo esos dos campos para el login
     @PostMapping("/login")
     public Usuario login(@RequestBody Usuario usuario) {
+        // Usa el email y el password, ignorando cualquier otro campo del DTO (como el nuevo 'username')
         return usuarioService.login(usuario.getEmail(), usuario.getPassword());
     }
 }

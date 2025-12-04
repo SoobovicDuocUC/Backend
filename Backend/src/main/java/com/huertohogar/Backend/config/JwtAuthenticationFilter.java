@@ -1,10 +1,10 @@
 package com.huertohogar.Backend.config;
 
 import com.huertohogar.Backend.service.JwtService;
-import javax.servlet.FilterChain; // CAMBIO: javax
-import javax.servlet.ServletException; // CAMBIO: javax
-import javax.servlet.http.HttpServletRequest; // CAMBIO: javax
-import javax.servlet.http.HttpServletResponse; // CAMBIO: javax
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

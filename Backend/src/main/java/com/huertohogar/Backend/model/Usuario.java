@@ -1,6 +1,6 @@
 package com.huertohogar.Backend.model;
 
-import javax.persistence.*; // CAMBIO AQUÍ: javax en vez de jakarta
+import javax.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,7 +34,7 @@ public class Usuario implements UserDetails {
     }
 
     @Override
-    public String getUsername() { return email; } // Usamos email como usuario
+    public String getUsername() { return email; }
 
     @Override
     public String getPassword() { return password; }

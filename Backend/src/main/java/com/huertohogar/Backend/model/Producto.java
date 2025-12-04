@@ -18,10 +18,8 @@ public class Producto {
     private String precioKilo;
     private String descripcion;
 
-    // Constructor vacío
     public Producto() {}
 
-    // Constructor con parámetros
     public Producto(String codigo, String nombre, Integer precio, String img,
                     String categoria, String precioKilo, String descripcion) {
         this.codigo = codigo;
@@ -33,7 +31,7 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    // Getters y Setters
+
     public Long getId() {
         return id;
     }

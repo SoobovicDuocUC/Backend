@@ -30,20 +30,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // Sintaxis antigua para SB 2.7
+                .csrf().disable()
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
-                .authorizeRequests() // CAMBIO: authorizeRequests en vez de authorizeHttpRequests
-                // RUTAS PÚBLICAS
-                .antMatchers("/api/auth/**").permitAll() // CAMBIO: antMatchers
+                .authorizeRequests()
+                // 1. RUTAS PÚBLICAS DE LA API
+                .antMatchers("/api/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/productos/**").permitAll()
 
-                // RUTAS ADMIN
+                // 2. HERRAMIENTAS DE DESARROLLO
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+
+                // 3. RUTAS DE ADMIN
                 .antMatchers(HttpMethod.POST, "/api/productos/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/api/productos/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/api/productos/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasAuthority("ADMIN")
 
-                // RESTO
+                // 4. El resto requiere estar logueado
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
@@ -51,6 +56,9 @@ public class SecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+
+        http.headers().frameOptions().disable();
 
         return http.build();
     }

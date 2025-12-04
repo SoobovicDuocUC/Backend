@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/api/productos/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/api/productos/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/usuarios/**").hasAuthority("ADMIN")
 
                 // 4. El resto requiere estar logueado
                 .anyRequest().authenticated()
